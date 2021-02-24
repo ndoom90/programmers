@@ -14,6 +14,40 @@ using namespace std;
 class Solution {
 
 public:
+    // K번째 수
+    int getKthNumber(vector<int> &array, vector<int> &command) {
+        // Extract range
+        vector<int> extractVector;
+        for (int i = command[0] - 1; i < command[1]; i++) {
+            extractVector.push_back(array[i]);
+        }
+
+        // Sort ascending
+        int temp;
+        for (int i = 0; i < extractVector.size() - 1; i++) {
+            for (int j = i + 1; j < extractVector.size(); j++) {
+                if (extractVector[i] > extractVector[j]) {
+                    temp = extractVector[i];
+                    extractVector[i] = extractVector[j];
+                    extractVector[j] = temp;
+                }
+            }
+        }
+
+        return extractVector[command[2] - 1];
+
+    }
+    vector<int> kthNumber(vector<int> array, vector<vector<int>> commands) {
+        vector<int> answer;
+
+        int commandsSize = commands.size();
+        const int COMMAND_SIZE = 3;
+
+        for (int i = 0; i < commandsSize; i++) {
+            answer.push_back(getKthNumber(array, commands[i]));
+        }
+        return answer;
+    }
 
     // 모의고사
     vector<int> termTest(vector<int> answers) {
