@@ -14,6 +14,67 @@ using namespace std;
 class Solution {
 
 public:
+
+    // 체육복 - Greedy (1 test case fail)
+    bool findAvailableGymSuit(int &cnt, int number, vector<int> &reserve) {
+
+        vector<int>::iterator iter = reserve.begin();
+        for (iter; iter < reserve.end(); iter++) {
+            if (*iter == number) {
+                reserve.erase(iter);
+                cnt++;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    void findAllSelfGymSuit(int &cnt, vector<int> &lost, vector<int> &reserve) {
+        vector<int>::iterator iterLost = lost.begin();
+        vector<int>::iterator iterReserve = reserve.begin();
+
+        for (iterLost; iterLost < lost.end(); iterLost++) {
+            iterReserve = reserve.begin();
+            for (iterReserve; iterReserve < reserve.end(); iterReserve++) {
+                if (*iterLost == *iterReserve) {
+                    lost.erase(iterLost);
+                    reserve.erase(iterReserve);
+                    cnt++;
+                    break;
+                }
+            }
+        }
+    }
+
+    int gymSuit(int n, vector<int> lost, vector<int> reserve) {
+        int answer = n - lost.size();
+
+        findAllSelfGymSuit(answer, lost, reserve);
+
+
+        for (int i = 0; i < lost.size(); i++) {
+            if (lost[i] == 1) {
+                findAvailableGymSuit(answer, lost[i] + 1, reserve);
+            }
+            else if (lost[i] == n) {
+                findAvailableGymSuit(answer, lost[i] - 1, reserve);
+            }
+
+            else {
+//                bool check = findAvailableGymSuit(answer, lost[i] - 1, reserve);
+                if (findAvailableGymSuit(answer, lost[i] - 1, reserve) == true) continue;
+
+                else {
+                    findAvailableGymSuit(answer, lost[i] + 1, reserve);
+                    continue;
+                }
+            }
+        }
+
+        return answer;
+    }
+
     // K번째 수
     int getKthNumber(vector<int> &array, vector<int> &command) {
         // Extract range
